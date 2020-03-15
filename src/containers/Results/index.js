@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Papa from 'papaparse';
-import { VictoryScatter, VictoryChart } from 'victory';
+import { VictoryAxis, VictoryScatter, VictoryChart } from 'victory';
 
 import dataset from '../../data/reverie_challenge_data.csv';
 import { options } from '../../data/assay_options'
@@ -62,11 +62,17 @@ const Results = () => {
          width={1200}
          height={600}
          padding={{ top: 10, bottom: 80, left: 40, right: 100 }}
+
       >
+         <VictoryAxis label="Measured Assay Data" />
+         <VictoryAxis dependentAxis label="Predicted Assay Data" />
+
          <VictoryScatter
             style={{ data: { fill: "#c43a31" } }}
             size={targetData.size}
             data={targetData}
+            x="x"
+            y="y"
          />
       </VictoryChart>
    </div >
