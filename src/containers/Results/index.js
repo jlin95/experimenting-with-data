@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import * as Papa from 'papaparse';
-import { VictoryAxis, VictoryScatter, VictoryChart } from 'victory';
+import { VictoryAxis, VictoryScatter, VictoryChart, VictorySelectionContainer } from 'victory';
 
 import dataset from '../../data/reverie_challenge_data.csv';
 import { options } from '../../data/assay_options'
 
 import { generateRanges } from '../../utils/graphingUtils';
 import { isValidDataPoint } from '../../utils/validatorUtils';
+import { Dropdown } from '../../components/Dropdown';
 
 const Results = () => {
 
+   // Initializing full data and default assay selection
    const [data, setData] = useState([]);
    const [assay, setAssay] = useState({
       selectedAssay: 'assay_0',
       selectedPrediction: 'model_for_assay_0'
    });
+
+
    useEffect(() => {
       Papa.parse(dataset, {
          header: true,
@@ -27,6 +31,7 @@ const Results = () => {
       })
    }, []);
 
+   // Helper functions to generate domains for building scatter plot
    const assayRanges = data.map(result => result[assay.selectedAssay]).filter(isValidDataPoint);
    const predictionRanges = data.map(result => result[assay.selectedPrediction]).filter(isValidDataPoint);
    const domains = generateRanges(assayRanges, predictionRanges);
@@ -38,44 +43,50 @@ const Results = () => {
       .map(dataPoint => {
          return {
             x: dataPoint[assay.selectedAssay],
-            y: dataPoint[assay.selectedPrediction]
+            y: dataPoint[assay.selectedPrediction],
+            smiles: dataPoint['smiles']
          }
       });
 
-   return <div>
-      <select
-         value={JSON.stringify(assay.value)}
-         onChange={e => {
-            const transformedSelectedAssay = JSON.parse(e.target.value);
-            setAssay({
-               selectedAssay: transformedSelectedAssay.assay,
-               selectedPrediction: transformedSelectedAssay.prediction
-            });
-         }}
-      >
-         {options.map(o => (
-            <option value={JSON.stringify(o.value)}>{o.label}</option>
-         ))}
-      </select>
-      <VictoryChart
-         domain={domains}
-         width={1200}
-         height={600}
-         padding={{ top: 10, bottom: 80, left: 40, right: 100 }}
+   const handleOptionChange = e => {
+      const transformedSelectedAssay = JSON.parse(e.target.value);
+      setAssay({
+         selectedAssay: transformedSelectedAssay.assay,
+         selectedPrediction: transformedSelectedAssay.prediction
+      });
+   }
 
-      >
-         <VictoryAxis label="Measured Assay Data" />
-         <VictoryAxis dependentAxis label="Predicted Assay Data" />
+   return (
+      <div>
+         <Dropdown options={options} selectedValue={JSON.stringify(assay.value)} handleOptionChange={handleOptionChange} />
+         <VictoryChart
+            containerComponent={
+               <VictorySelectionContainer
+                  selectionStyle={{
+                     fill: "tomato", fillOpacity: 0.5,
+                     stroke: "tomato", strokeWidth: 2
+                  }}
+                  onSelection={(points, bounds, props) => console.log(points, bounds, props)}
+               />}
+            domain={domains}
+            width={1200}
+            height={600}
+            padding={{ top: 10, bottom: 80, left: 40, right: 100 }}
 
-         <VictoryScatter
-            style={{ data: { fill: "#c43a31" } }}
-            size={targetData.size}
-            data={targetData}
-            x="x"
-            y="y"
-         />
-      </VictoryChart>
-   </div >
+         >
+            <VictoryAxis label="Measured Assay Data" />
+            <VictoryAxis dependentAxis label="Predicted Assay Data" />
+
+            <VictoryScatter
+               style={{ data: { fill: ({ active }) => active ? "#526b2d" : "c43a31" } }}
+               size={targetData.size}
+               data={targetData}
+               x="x"
+               y="y"
+            />
+         </VictoryChart>
+      </div >
+   )
 }
 
 export { Results }

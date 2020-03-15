@@ -1,14 +1,17 @@
 import React from 'react';
 
-const Dropdown = props => {
+const Dropdown = ({
+    options, handleOptionChange, selectedValue
+}) => {
     return (
         <select
-            value={props.selectedOption}
-            onChange={props.handleChange}>
-            {props.options.map(o => (
-                <option value={o.value}>{o.label}</option>
+            value={selectedValue}
+            onChange={handleOptionChange}
+        >
+            {options.map(o => (
+                <option key={o.value.assay} value={JSON.stringify(o.value)}>{o.label}</option>
             ))}
-        </select>
+        </select >
     );
 };
 

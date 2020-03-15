@@ -17,11 +17,13 @@ In this challenge, in the spirit of rapid prototyping, I started with using d3, 
 
 A quick note to make as well was that I'd removed the first header in the csv - I recognize that at some point focusing too much time on stripping away the first row for csv parsing would take away precious time from actually coding up the visualizations. 
 
+For the missing values among the assay data, I have chosen to filter them out in the final data set and not show them at all in the scatter plot. 
+
 ## How to interact with the UI
 
 To start, the UI already loads 'Assay 0' by default. This brings up all the data points corresponding to Assay 0, and thereby Model for Assay 0 as well. 
 To switch to view visualizations for another assay, simply use the dropdown located in the top left corner to view. 
 
-To view the compounds' structure, Victory has this really neat feature that allows you to just drag over a certain area of the plot. 
+To view the compounds' structure, Victory has this really neat feature that allows you to just drag over a certain area of the plot. Just drag over an area you want to view and the relevant compounds will show up in a modal.
 
 
