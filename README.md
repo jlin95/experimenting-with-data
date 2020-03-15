@@ -1,14 +1,22 @@
 # Requirements 
 
-Make sure you have either npm or yarn installed. 
+Make sure you have the following installed:
+- [NodeJs](https://nodejs.org/)
+
+- [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+Verify that you have these versions of Node and NPM runnnig, by running the following: 
+```
+node -v (this should output v13.6.0)
+npm -v (this should output 6.13.4)
+ ```
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `yarn install && yarn start`
+### `npm install && npm start`
 
-Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 # How to interact with the UI
