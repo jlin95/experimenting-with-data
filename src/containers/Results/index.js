@@ -8,16 +8,13 @@ import { options } from '../../data/assay_options'
 import { generateRanges } from '../../utils/graphingUtils';
 import { isValidDataPoint } from '../../utils/validatorUtils';
 
-// Get the data
-
 const Results = () => {
+
    const [data, setData] = useState([]);
-   // const [assay, setAssay] = useState({
-   //    selectedAssay: 'assay_0',
-   //    selectedPrediction: 'model_for_assay_0'
-   // });
-   const [prediction, setPrediction] = useState('model_for_assay_0');
-   const [assay, setAssay] = useState('assay_0');
+   const [assay, setAssay] = useState({
+      selectedAssay: 'assay_0',
+      selectedPrediction: 'model_for_assay_0'
+   });
    useEffect(() => {
       Papa.parse(dataset, {
          header: true,
@@ -30,32 +27,34 @@ const Results = () => {
       })
    }, []);
 
-   const assayRanges = data.map(result => result[assay]).filter(isValidDataPoint);
-   const predictionRanges = data.map(result => result[prediction]).filter(isValidDataPoint);
+   const assayRanges = data.map(result => result[assay.selectedAssay]).filter(isValidDataPoint);
+   const predictionRanges = data.map(result => result[assay.selectedPrediction]).filter(isValidDataPoint);
    const domains = generateRanges(assayRanges, predictionRanges);
 
    const showDataPoint = dataPoint => {
-      return dataPoint[prediction] !== null && dataPoint[assay] != null;
+      return dataPoint[assay.selectedPrediction] !== null && dataPoint[assay.selectedAssay] != null;
    }
-
    const targetData = data.filter(showDataPoint)
       .map(dataPoint => {
          return {
-            x: dataPoint[assay],
-            y: dataPoint[prediction]
+            x: dataPoint[assay.selectedAssay],
+            y: dataPoint[assay.selectedPrediction]
          }
       });
-   console.log(assay);
+
    return <div>
       <select
-         key={assay}
-         value={assay}
-         onChange={(event, data) => {
-            setAssay(data);
+         value={JSON.stringify(assay.value)}
+         onChange={e => {
+            const transformedSelectedAssay = JSON.parse(e.target.value);
+            setAssay({
+               selectedAssay: transformedSelectedAssay.assay,
+               selectedPrediction: transformedSelectedAssay.prediction
+            });
          }}
       >
          {options.map(o => (
-            <option value={o.value}>{o.label}</option>
+            <option value={JSON.stringify(o.value)}>{o.label}</option>
          ))}
       </select>
       <VictoryChart
