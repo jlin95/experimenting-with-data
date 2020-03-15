@@ -8,6 +8,7 @@ import { options } from '../../data/assay_options'
 import { generateRanges } from '../../utils/graphingUtils';
 import { isValidDataPoint } from '../../utils/validatorUtils';
 import { Dropdown } from '../../components/Dropdown';
+import { Visualizations } from '../Visualizations';
 
 const Results = () => {
 
@@ -17,7 +18,8 @@ const Results = () => {
       selectedAssay: 'assay_0',
       selectedPrediction: 'model_for_assay_0'
    });
-
+   const [smilesData, setSmilesData] = useState([]);
+   const [selectionProps, setSelectionProps] = useState([]);
 
    useEffect(() => {
       Papa.parse(dataset, {
@@ -44,7 +46,8 @@ const Results = () => {
          return {
             x: dataPoint[assay.selectedAssay],
             y: dataPoint[assay.selectedPrediction],
-            smiles: dataPoint['smiles']
+            smiles: dataPoint['smiles'],
+            name: dataPoint['identifier']
          }
       });
 
@@ -56,6 +59,10 @@ const Results = () => {
       });
    }
 
+   useEffect(() => {
+      setSmilesData([...new Set(selectionProps[0]?.data.map(item => [item.smiles, item.name]))])
+   }, [selectionProps]);
+
    return (
       <div>
          <Dropdown options={options} selectedValue={JSON.stringify(assay.value)} handleOptionChange={handleOptionChange} />
@@ -66,8 +73,9 @@ const Results = () => {
                      fill: "tomato", fillOpacity: 0.5,
                      stroke: "tomato", strokeWidth: 2
                   }}
-                  onSelection={(points, bounds, props) => console.log(points, bounds, props)}
-               />}
+                  onSelection={(props) => setSelectionProps(props)}
+               />
+            }
             domain={domains}
             width={1200}
             height={600}
@@ -76,7 +84,6 @@ const Results = () => {
          >
             <VictoryAxis label="Measured Assay Data" />
             <VictoryAxis dependentAxis label="Predicted Assay Data" />
-
             <VictoryScatter
                style={{ data: { fill: ({ active }) => active ? "#526b2d" : "c43a31" } }}
                size={targetData.size}
@@ -85,6 +92,7 @@ const Results = () => {
                y="y"
             />
          </VictoryChart>
+         <Visualizations smilesData={smilesData} />
       </div >
    )
 }
