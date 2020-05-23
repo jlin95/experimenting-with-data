@@ -25,13 +25,13 @@ To start, the UI already loads 'Assay 0' by default, for all the 914 componds. T
 
 To switch to view visualizations for another assay, simply use the dropdown located in the top left corner to view. 
 
-To view the compounds' structure, Victory has this really neat feature that allows you to just drag over a certain area of the plot. Just drag over an area you want to view and the relevant compounds will show up below the scatter plot. 
+To view the compounds' structure, [Victory](https://formidable.com/open-source/victory/)) has this really neat feature that allows you to just drag over a certain area of the plot. Just drag over an area you want to view and the relevant compounds will show up below the scatter plot. (It's a bit janky). 
 
-Select 1 data point at a time.
+Hence, select 1 data point at a time to view the rendering of the compound structure.
 
 ## Some assumptions and considerations made
 
-In this challenge, in the spirit of rapid prototyping, I started with using d3, but after toiling for a longer than expected time on dealing with d3 v5, I decided to go with an alternate library called Victory, where I could construct scatter plots much more quickly. 
+In the spirit of rapid prototyping, I started with using d3, but after toiling for a longer than expected time on dealing with d3 v5, I decided to go with an alternate library called Victory, where I could construct scatter plots much more quickly. 
 
 A quick note to make as well was that I'd removed the first header in the csv - I recognize that at some point focusing too much time on stripping away the first row for csv parsing would take away precious time from actually coding up the visualizations. 
 
@@ -48,4 +48,5 @@ For the missing values among the assay data, I have chosen to filter them out in
     /utils -- contains generic enough functions that are reusable across other future components, let's say if we were to build out other graphs in the future, this folder is the central repository for commonly used functions
 
 ```
+
 
